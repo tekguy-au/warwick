@@ -1,65 +1,101 @@
 import Image from "next/image";
 
+const stories = [
+  {
+    title: "The Rainy Day Web",
+    snippet:
+      "Warwick had been planning his best web ever. But then — drip, drop, drip — the rain came. Could a rainy day actually make things better?",
+  },
+  {
+    title: "Warwick Finds a Friend",
+    snippet:
+      "Nobody wanted to sit next to a spider at the picnic. But Warwick had a secret — the best snacks, and the biggest heart in the whole meadow.",
+  },
+  {
+    title: "Up, Up and Away!",
+    snippet:
+      "A gust of wind caught Warwick's web and lifted him higher than he'd ever been. Up there, the world looked very small — and very wonderful.",
+  },
+];
+
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex flex-col items-center min-h-screen" style={{ background: "#fdf6ee" }}>
+
+      {/* Hero */}
+      <section className="w-full flex flex-col items-center px-6 pt-16 pb-10 text-center">
+        <div className="relative w-48 h-48 mb-6 drop-shadow-xl">
+          <Image
+            src="/warwick.jpg"
+            alt="Warwick the spider"
+            fill
+            className="object-contain rounded-full"
+            priority
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <h1 className="text-5xl font-extrabold text-amber-900 mb-3 tracking-tight">
+          Meet Warwick ✨
+        </h1>
+        <p className="text-xl text-amber-800 max-w-md leading-relaxed">
+          A fluffy little spider with great big eyes — and even bigger adventures. Stories for little ones, full of wonder and warmth.
+        </p>
+      </section>
+
+      {/* Story Snippets */}
+      <section className="w-full max-w-3xl px-6 pb-12">
+        <h2 className="text-2xl font-bold text-amber-800 mb-6 text-center">
+          A little taste of Warwick&apos;s world...
+        </h2>
+        <div className="grid gap-5 sm:grid-cols-3">
+          {stories.map((story) => (
+            <div
+              key={story.title}
+              className="rounded-2xl p-5 shadow-sm border border-amber-100"
+              style={{ background: "#fff8ef" }}
+            >
+              <h3 className="text-lg font-bold text-amber-900 mb-2">{story.title}</h3>
+              <p className="text-sm text-amber-800 leading-relaxed">{story.snippet}</p>
+              <p className="mt-3 text-xs text-amber-500 font-semibold uppercase tracking-wide">
+                Coming soon
+              </p>
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Subscription */}
+      <section
+        className="w-full flex flex-col items-center px-6 py-14 text-center"
+        style={{ background: "#f5e6d0" }}
+      >
+        <div className="text-4xl mb-3">🕷️</div>
+        <h2 className="text-3xl font-extrabold text-amber-900 mb-3">
+          Be the first to hear from Warwick
+        </h2>
+        <p className="text-amber-800 max-w-sm mb-7 leading-relaxed">
+          New stories, 20-second snippets, and little surprises — delivered straight to you.
+        </p>
+        <form className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+          <input
+            type="email"
+            placeholder="your@email.com"
+            required
+            className="flex-1 rounded-full px-5 py-3 text-amber-900 border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+          />
+          <button
+            type="submit"
+            className="rounded-full px-7 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm transition-colors"
+          >
+            Join Warwick&apos;s world
+          </button>
+        </form>
+        <p className="text-xs text-amber-600 mt-4">No spam. Just warm, fuzzy stories.</p>
+      </section>
+
+      {/* Footer */}
+      <footer className="w-full text-center py-6 text-xs text-amber-400">
+        © {new Date().getFullYear()} Warwick. All rights reserved.
+      </footer>
+    </main>
   );
 }

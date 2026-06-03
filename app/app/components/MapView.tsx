@@ -2,8 +2,8 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { Fragment, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Circle, useMap } from "react-leaflet";
+import { Fragment, useEffect, useState } from "react";
+import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
 import type { LatLng } from "../lib/geo";
 
 export interface HeroMarker {
@@ -36,17 +36,10 @@ const heroIcon = (image: string, inRange: boolean) =>
     iconAnchor: [23, 23],
   });
 
-/** Keep the map gently centred on the player as they move. */
-function FollowPlayer({ player }: { player: LatLng | null }) {
-  const map = useMap();
-  useEffect(() => {
-    if (player) map.setView([player.lat, player.lng], map.getZoom(), { animate: true });
-  }, [player, map]);
-  return null;
-}
-
 export default function MapView({ player, heroes }: MapViewProps) {
-  // Centre on the player if we have them, else the middle of the hero spots.
+  const [map, setMap] = useState<L.Map | null>(null);
+  const [following, setFollowing] = useState(true);
+
   const center: [number, number] = player
     ? [player.lat, player.lng]
     : [
@@ -54,47 +47,84 @@ export default function MapView({ player, heroes }: MapViewProps) {
         heroes.reduce((s, h) => s + h.lng, 0) / heroes.length,
       ];
 
+  // Gently follow the player — but only while "following" is on.
+  useEffect(() => {
+    if (map && following && player) {
+      map.setView([player.lat, player.lng], map.getZoom(), { animate: true });
+    }
+  }, [map, following, player]);
+
+  // Dragging the map to browse turns following off (so it stops snapping back).
+  useEffect(() => {
+    if (!map) return;
+    const stop = () => setFollowing(false);
+    map.on("dragstart", stop);
+    return () => {
+      map.off("dragstart", stop);
+    };
+  }, [map]);
+
+  const focusHero = (h: HeroMarker) => {
+    setFollowing(false);
+    map?.flyTo([h.lat, h.lng], 18, { duration: 0.6 });
+  };
+
+  const recenterOnMe = () => {
+    if (player && map) {
+      setFollowing(true);
+      map.flyTo([player.lat, player.lng], 16, { duration: 0.6 });
+    }
+  };
+
   return (
-    <MapContainer
-      center={center}
-      zoom={16}
-      zoomControl={false}
-      style={{ height: "100%", width: "100%" }}
-    >
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        maxZoom={20}
-      />
+    <div className="relative h-full w-full">
+      <MapContainer
+        ref={setMap}
+        center={center}
+        zoom={16}
+        zoomControl={false}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          maxZoom={20}
+        />
 
-      {heroes.map((h) => (
-        <Fragment key={h.id}>
-          <Circle
-            center={[h.lat, h.lng]}
-            radius={h.radiusM}
-            pathOptions={{
-              color: h.inRange ? "#c8860d" : "#d9b382",
-              fillColor: h.inRange ? "#f5c451" : "#f3e3c6",
-              fillOpacity: h.inRange ? 0.35 : 0.18,
-              weight: 2,
-            }}
-          />
-          <Marker position={[h.lat, h.lng]} icon={heroIcon(h.image, h.inRange)} />
-        </Fragment>
-      ))}
+        {heroes.map((h) => (
+          <Fragment key={h.id}>
+            <Marker
+              position={[h.lat, h.lng]}
+              icon={heroIcon(h.image, h.inRange)}
+              eventHandlers={{ click: () => focusHero(h) }}
+            />
+          </Fragment>
+        ))}
 
+        {player && (
+          <>
+            <Circle
+              center={[player.lat, player.lng]}
+              radius={Math.max(player.accuracy, 8)}
+              pathOptions={{ color: "#3b82f6", fillColor: "#93c5fd", fillOpacity: 0.12, weight: 1 }}
+            />
+            <Marker position={[player.lat, player.lng]} icon={playerIcon} />
+          </>
+        )}
+      </MapContainer>
+
+      {/* Recenter-on-me button */}
       {player && (
-        <>
-          <Circle
-            center={[player.lat, player.lng]}
-            radius={Math.max(player.accuracy, 8)}
-            pathOptions={{ color: "#3b82f6", fillColor: "#93c5fd", fillOpacity: 0.15, weight: 1 }}
-          />
-          <Marker position={[player.lat, player.lng]} icon={playerIcon} />
-        </>
+        <button
+          onClick={recenterOnMe}
+          aria-label="Centre on me"
+          className={`absolute right-3 top-20 z-[1000] w-12 h-12 rounded-full shadow-md flex items-center justify-center text-xl active:scale-95 ${
+            following ? "bg-blue-500 text-white" : "bg-white text-blue-600"
+          }`}
+        >
+          📍
+        </button>
       )}
-
-      <FollowPlayer player={player} />
-    </MapContainer>
+    </div>
   );
 }

@@ -40,4 +40,17 @@ export const FIXED_SPAWNS: FixedSpawn[] = [
     hint: "Location 3",
     oneTime: false,
   },
+
+  // ⚠️ TEMP TEST SPOT — REMOVE BEFORE LAUNCH.
+  // Planet-sized radius so the Catch button appears anywhere, letting Russ
+  // test the catch + Friend Book without travelling to a real location.
+  {
+    id: "test-anywhere",
+    characterId: "warwick",
+    lat: -37.7259857,
+    lng: 144.9810134,
+    radiusM: 20_000_000,
+    hint: "Test spot — catch from anywhere",
+    oneTime: false,
+  },
 ];

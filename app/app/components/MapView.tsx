@@ -11,7 +11,7 @@ export interface HeroMarker {
   lat: number;
   lng: number;
   radiusM: number;
-  emoji: string;
+  image: string;
   name: string;
   inRange: boolean;
 }
@@ -28,12 +28,12 @@ const playerIcon = L.divIcon({
   iconAnchor: [11, 11],
 });
 
-const heroIcon = (emoji: string, inRange: boolean) =>
+const heroIcon = (image: string, inRange: boolean) =>
   L.divIcon({
     className: "",
-    html: `<div class="ww-hero-pin ${inRange ? "ww-hero-pin--live" : ""}">${emoji}</div>`,
-    iconSize: [44, 44],
-    iconAnchor: [22, 22],
+    html: `<div class="ww-hero-pin ${inRange ? "ww-hero-pin--live" : ""}"><img src="${image}" alt="" /></div>`,
+    iconSize: [46, 46],
+    iconAnchor: [23, 23],
   });
 
 /** Keep the map gently centred on the player as they move. */
@@ -79,7 +79,7 @@ export default function MapView({ player, heroes }: MapViewProps) {
               weight: 2,
             }}
           />
-          <Marker position={[h.lat, h.lng]} icon={heroIcon(h.emoji, h.inRange)} />
+          <Marker position={[h.lat, h.lng]} icon={heroIcon(h.image, h.inRange)} />
         </Fragment>
       ))}
 

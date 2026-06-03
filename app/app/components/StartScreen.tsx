@@ -8,10 +8,10 @@ export default function StartScreen({ onStart }: { onStart: () => void }) {
       <div className="relative w-40 h-40 mb-6 drop-shadow-xl">
         <Image src="/warwick.jpg" alt="Warwick the spider" fill className="object-contain rounded-full" priority />
       </div>
-      <h1 className="text-4xl font-extrabold text-amber-900 mb-3">Catch Warwick ✨</h1>
+      <h1 className="text-4xl font-extrabold text-amber-900 mb-3">Help Noah find Warwick ✨</h1>
       <p className="text-lg text-amber-800 max-w-sm leading-relaxed mb-8">
-        Warwick&apos;s friends are hiding all around your neighbourhood. Go for a
-        walk with a grown-up to find them!
+        Warwick and his friends are hiding all around the neighbourhood. Go for a
+        walk with a grown-up and help Noah find them!
       </p>
       <button
         onClick={onStart}

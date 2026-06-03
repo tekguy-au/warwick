@@ -3,7 +3,7 @@
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Fragment, useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import type { LatLng } from "../lib/geo";
 
 export interface HeroMarker {
@@ -101,16 +101,7 @@ export default function MapView({ player, heroes }: MapViewProps) {
           </Fragment>
         ))}
 
-        {player && (
-          <>
-            <Circle
-              center={[player.lat, player.lng]}
-              radius={Math.max(player.accuracy, 8)}
-              pathOptions={{ color: "#3b82f6", fillColor: "#93c5fd", fillOpacity: 0.12, weight: 1 }}
-            />
-            <Marker position={[player.lat, player.lng]} icon={playerIcon} />
-          </>
-        )}
+        {player && <Marker position={[player.lat, player.lng]} icon={playerIcon} />}
       </MapContainer>
 
       {/* Recenter-on-me button */}
